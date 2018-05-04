@@ -1,1 +1,27 @@
 <h1>HELLO WORLD</h1>
+<aside>
+<form method="POST" action="routes/new">
+  <input type="text" name="name" placeholder="Paths name">
+  <input type="number" name="walk_time" placeholder="walk time">
+  <input type="text" name="user_id" placeholder="user_id">
+  <input type="text" name="description" placeholder="description">
+
+  <input type="submit" name="submit">
+
+</form>
+</aside>
+
+<% if (result) { %>
+  <% result.forEach((item)=>{ %>
+    <div>
+    <h3>
+      <%= item.name %> <br/>
+     walk time: <%= item.walk_time %>
+     <%= item.description%><br/> by user: 
+     <%= item.user_id%>
+    </h3>
+    </div>
+    <button><a href=<%=`/routes/${item.id}/edit`%>>EDIT</a></button>
+  <% }) %>
+
+<% } %>
