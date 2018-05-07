@@ -7,23 +7,28 @@ const router = express.Router()
 
 module.exports = (knex) => {
 
- // getRatings = (id) =>{
- //    return knex
- //      .select('rating').from('ratings')
- //      .where('route_id', id)
- //        .then( (response) =>{
-
- //          return response[0].rating
- //        })
- //  }
-
+getComments = (id) =>{
+  return new Promise(function (resolve, reject){
+    knex
+      .select('comment')
+      .from('comments')
+      .where('route_id', id)
+        
+      return resolve();
+  })
+}
   getRoutes = () => { //with ratings
     return knex
       .select('*').from('routes')
-      .join('ratings', {'routes.id': 'ratings.route_id'})
       .then((response) => {
         const users = [] 
         for (let i = 0; i < response.length; i++) {
+         let comments = []
+          getComments(response[i].id)
+            .then((result)=>{
+              comments.push(result)
+            })
+         console.log("comming from getRoutes ", comments)
             let info = {
               id: response[i].id,
               name: response[i].name,
@@ -31,7 +36,6 @@ module.exports = (knex) => {
               name: response[i].name,
               user_id: response[i].user_id,
               description: response[i].description,
-              ratings: response[i].rating
             }
             users.push(info)
         }
@@ -59,13 +63,11 @@ module.exports = (knex) => {
       name: data.name,
       walk_time: data.walk_time,
       user_id: data.user_id,
-      description: data.description,
-      comment: [''],
-      rating: data.rating
-    }).then(function(result){
-
-    }).catch(function(err){
-      console.log(err)
+      description: data.description
+    }).then((response)=>{
+      console.log("coming from postRoute-then", response)
+    }).catch((err)=>{
+      console.log("coming from postRoute ", err)
     })
   }
 
@@ -92,20 +94,58 @@ module.exports = (knex) => {
             })
   }
 
-  router.get("/", (req,res) => { //root route
-      getRoutes()
-        .then((result) => {
-          res.render('index', {result: result} )
-        })
-        .catch(function(err){
-          res.send(err)
-        })
-  })
 
   router.get("/api/all", (req, res)=>{ //API - json
     getRoutes()
     .then((result) => {
           res.json(result)
+        })
+        .catch(function(err){
+          res.send(err)
+        })
+  })
+  router.post('/api/all/new' , (req,res) =>{
+    postRoute(req.body)
+      .then((result) => {
+        res.json(result)
+      })
+      .catch((err) =>{
+        res.send(err)
+      })
+  })
+
+  router.delete("/api/:id/delete", (req,res)=>{
+    deleteRoute(req.params.id)
+    .then((result) =>{
+      console.log(result)
+      res.json(result)
+      
+    })
+  })
+
+  router.get("/api/:id", (req,res) => {
+      console.log(req.params.id)
+      getRoute(req.params.id)
+        .then((result) => {
+          // console.log(result)
+          res.json('result')
+        })
+        .catch(function(err){
+          res.send(err)
+        });
+  });
+
+  router.put("/api/:id/edit", (req, res)=>{
+    updateRoute(req.params.id, req.body)
+    .then((result)=>{
+      res.send(200).json(result)
+    })
+  })
+
+  router.get("/", (req,res) => { //root route
+      getRoutes()
+        .then((result) => {
+          res.render('index', {result: result} )
         })
         .catch(function(err){
           res.send(err)

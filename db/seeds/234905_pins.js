@@ -8,5 +8,7 @@ exports.seed = function(knex, Promise) {
         knex('pins').insert({id: 3, description: '3td pin went', user_id: 2}),
         knex('pins').insert({id: 4, description: '4th pin went', user_id: 3})
       ]);
-    });
+    }).catch((err)=>{
+      console.log("coming from 234_pins", err)
+    })
 };

@@ -10,5 +10,7 @@ exports.seed = function(knex, Promise) {
         knex('likes').insert({id: 5, user_id: 1}),
         knex('likes').insert({id: 6, user_id: 1})
       ]);
-    });
+    }).catch((err)=>{
+      console.log("coming from 2322_likes ", err )
+    })
 };

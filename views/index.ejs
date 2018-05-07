@@ -5,9 +5,9 @@
   <input type="number" name="walk_time" placeholder="walk time">
   <input type="text" name="user_id" placeholder="user_id">
   <input type="text" name="description" placeholder="description">
-  <input type="text" name="comments" placeholder="comments">
+<!--   <input type="text" name="comments" placeholder="comments">
   <input type="number" name="rating" placeholder="ratings">
-
+ -->
 
 
   <input type="submit" name="submit">
@@ -26,6 +26,13 @@
      <%= item.user_id%>
      ratings: 
      <%= item.ratings%>
+     <%if (item.comments){ %>
+      <%item.comments[0].forEach(comment => {%>
+      <div>
+
+      </div
+      <%})%>
+     <%}%>
 
 
     </h3>
